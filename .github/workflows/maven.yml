@@ -32,3 +32,29 @@ jobs:
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+  Deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2 
+      - name: Deploy in EC2
+        env:
+            PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+            HOSTNAME : ${{ secrets.HOSTNAME  }}
+            USER_NAME : ${{ secrets.USER_NAME  }}
+            
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          
+            #Now we have got the access of EC2 and we will start the deploy .
+            sudo su &&
+            docker stop $(docker ps -a -q) &&
+            docker rm $(docker ps -a -q) &&
+            docker image rm naveennallappan/signiance-poc:latest &&
+            docker pull naveennallappan/signiance-poc &&
+            docker images ls &&
+            docker run -d -p 80:8080 naveennallappan/signiance-poc &&
+            sleep 10 &&
+            curl http://43.205.239.76/welcome
