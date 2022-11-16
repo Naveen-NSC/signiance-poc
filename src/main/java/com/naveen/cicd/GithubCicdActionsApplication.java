@@ -11,7 +11,7 @@ public class GithubCicdActionsApplication {
 
 	@GetMapping("/welcome")
 	public String welcome(){
-		return "Welcome to Sample springboot app for Signiance-v2 !";
+		return "Welcome to Sample springboot app for Signiance-v3 !";
 	}
 
 
