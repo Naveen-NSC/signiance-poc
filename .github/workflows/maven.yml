@@ -51,5 +51,3 @@ jobs:
           sudo docker pull naveennallappan/signiance-poc
           sudo docker images ls
           sudo docker run -d -p 80:8080 naveennallappan/signiance-poc
-          sudo sleep 10
-          sudo curl http://43.205.239.76/welcome
